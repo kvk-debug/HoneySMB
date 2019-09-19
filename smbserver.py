@@ -2,7 +2,11 @@ from libs.smbserver import SMBSERVER
 from binascii import unhexlify
 import ConfigParser
 import sys
+import os
 
+CURRENT_PATH = os.path.dirname(os.path.abspath( __file__ ))
+CONFIG_PATH = os.path.join(CURRENT_PATH, "smb.conf")
+SHARES_PATH = os.path.join(CURRENT_PATH, "shares.conf")
 
 class SimpleSMBServer:
     def __init__(self, listenAddress='0.0.0.0', listenPort=445, configFile=None):
@@ -66,11 +70,11 @@ class SimpleSMBServer:
 
 def main():
     smbConfig = ConfigParser.RawConfigParser()
-    smbConfig.read('/home/smb/smb.conf')
+    smbConfig.read(CONFIG_PATH)
     smbServer = SimpleSMBServer(configFile=smbConfig)
 
     shareConfig = ConfigParser.RawConfigParser()
-    shareConfig.read("/home/smb/shares.conf")
+    shareConfig.read(SHARES_PATH)
 
     shareNames = [i.strip() for i in shareConfig.get('shareNames', 'share_names').split(',')]
     for shareName in shareNames:
